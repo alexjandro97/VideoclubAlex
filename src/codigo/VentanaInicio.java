@@ -20,7 +20,7 @@ import javax.swing.JPasswordField;
 * incremente el contador a continuación
 * como advertencia para su siguiente colega:
 *
-* total_horas_perdidas_en_este_codigo = 1
+* total_horas_perdidas_en_este_codigo = 4
 */
 
 /**
