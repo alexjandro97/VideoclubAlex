@@ -1,11 +1,15 @@
 package codigo;
 
+import java.awt.Image;
 import java.awt.TextField;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 
 /*
@@ -20,7 +24,7 @@ import javax.swing.JPasswordField;
 * incremente el contador a continuación
 * como advertencia para su siguiente colega:
 *
-* total_horas_perdidas_en_este_codigo = 4
+* total_horas_perdidas_en_este_codigo = 6
 */
 
 /**
@@ -32,7 +36,9 @@ public class VentanaInicio extends javax.swing.JFrame {
     Connection conexion;//para almacenar la conexion
     Statement estado;//almacenar el estado de la conexion
     ResultSet resultado;//resultado de la consulta
-
+    //Array para guardar el nombre y apellido del usuario
+    static String[] nombres = new String[2];
+    static MenuPrincipal frame = new MenuPrincipal();
     
     private void login(){
         String user = userText.getText();
@@ -47,8 +53,21 @@ public class VentanaInicio extends javax.swing.JFrame {
             int logCorrecto = resultado.getRow();
             
             if(logCorrecto == 1){
-                MenuPrincipal frame = new MenuPrincipal();
+                //MenuPrincipal.nombreApellidosUser.setText(user);
                 frame.setVisible(true);
+                //hago una consulta para sacar el nombre y apellido del usuario segun el DNI (clave)
+                ResultSet nombre = estado.executeQuery("SELECT Nombre, Apellido FROM videoclub.usuarios WHERE DNI='"+user+"'");
+                while(nombre.next()){
+                    nombres[0] = nombre.getString("Nombre");
+                    nombres[1] = nombre.getString("Apellido");
+                }
+                MenuPrincipal.nombreApellidosUser.setText(nombres[0] + " " + nombres[1]);
+                //declaro la foto del usuario para meterla en el jLabel
+                ImageIcon fotoUsuario = new ImageIcon(
+                                          getClass().getResource("/fotosUsuarios/"+user + ".jpg")
+                                            );
+                //meto la foto en el jLabel
+                MenuPrincipal.fotoUser.setIcon(fotoUsuario);
                 this.setVisible(false);
             } else {
                 ventanaError.setVisible(true);
@@ -80,8 +99,8 @@ public class VentanaInicio extends javax.swing.JFrame {
     public VentanaInicio() {
         initComponents();
         this.setLocation(450, 225);
-        ventanaError.setSize(510, 260);
-        ventanaError.setLocation(450, 225);
+        ventanaError.setSize(510, 300);
+        ventanaError.setLocation(400, 225);
         conexion();
     }
     
@@ -118,19 +137,19 @@ public class VentanaInicio extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ventanaErrorLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(ventanaErrorLayout.createSequentialGroup()
+                .addGap(146, 146, 146)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(143, 143, 143))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ventanaErrorLayout.setVerticalGroup(
             ventanaErrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ventanaErrorLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(44, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(53, 53, 53))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -246,8 +265,8 @@ public class VentanaInicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton login;
-    private javax.swing.JPasswordField password;
-    private javax.swing.JTextField userText;
+    public static javax.swing.JPasswordField password;
+    public static javax.swing.JTextField userText;
     private javax.swing.JDialog ventanaError;
     // End of variables declaration//GEN-END:variables
 }

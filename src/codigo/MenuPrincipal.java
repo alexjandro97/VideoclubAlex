@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package codigo;
 
 import java.sql.Connection;
@@ -10,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JLabel;
 
 /**
  *
@@ -17,33 +13,38 @@ import java.sql.Statement;
  */
 public class MenuPrincipal extends javax.swing.JFrame {
 
+    
     Connection conexion;//para almacenar la conexion
     Statement estado;//almacenar el estado de la conexion
     ResultSet resultado;//resultado de la consulta
-
-    private void usuario() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://192.168.56.101/videoclub", "root", "admin.1234");
-            estado = conexion.createStatement();
-            resultado = estado.executeQuery("SELECT * FROM videoclub.usuarios WHERE DNI = current_user");
-            
-            //Estoy intentando poner en el Label el nombre y apellido del usuario
-
-        } catch (ClassNotFoundException ex) {
-            System.out.println("No se ha encontrado el Driver de la BBDD");
-        } catch (SQLException ex) {
-            System.out.println("No se ha podido conectar con la BBDD");
-        }
-    }
+    /*
+    De momento todo este codigo no sirve, ¡DE MOMENTOOOO!
+    */
+//    private void usuario() {
+//        try {
+//            Class.forName("com.mysql.jdbc.Driver");
+//            conexion = DriverManager.getConnection("jdbc:mysql://192.168.56.101/videoclub", "root", "admin.1234");
+//            estado = conexion.createStatement();
+//            resultado = estado.executeQuery("SELECT * FROM videoclub.usuarios WHERE DNI = current_user");
+//            
+//            //Estoy intentando poner en el Label el nombre y apellido del usuario
+//           // while(){
+//                
+//           // }
+//        } catch (ClassNotFoundException ex) {
+//            System.out.println("No se ha encontrado el Driver de la BBDD");
+//        } catch (SQLException ex) {
+//            System.out.println("No se ha podido conectar con la BBDD");
+//        }
+//    }
 
     /**
      * Creates new form MenuPrincipal
      */
     public MenuPrincipal() {
         initComponents();
-        this.setSize(667, 529);
-        this.setLocation(350, 95);
+        this.setSize(667, 725);
+        this.setLocation(350, 35);
     }
 
     /**
@@ -57,6 +58,14 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         nombreApellidosUser = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        fotoUser = new javax.swing.JLabel();
+        navegador = new javax.swing.JTabbedPane();
+        Cine = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        Usuario = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        Buscador = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,26 +74,102 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setText("Usuario:");
 
+        jLabel1.setText("Hola");
+
+        javax.swing.GroupLayout CineLayout = new javax.swing.GroupLayout(Cine);
+        Cine.setLayout(CineLayout);
+        CineLayout.setHorizontalGroup(
+            CineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CineLayout.createSequentialGroup()
+                .addGap(103, 103, 103)
+                .addComponent(jLabel1)
+                .addContainerGap(525, Short.MAX_VALUE))
+        );
+        CineLayout.setVerticalGroup(
+            CineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CineLayout.createSequentialGroup()
+                .addGap(113, 113, 113)
+                .addComponent(jLabel1)
+                .addContainerGap(233, Short.MAX_VALUE))
+        );
+
+        navegador.addTab("Cine", Cine);
+
+        jLabel3.setText("que");
+
+        javax.swing.GroupLayout UsuarioLayout = new javax.swing.GroupLayout(Usuario);
+        Usuario.setLayout(UsuarioLayout);
+        UsuarioLayout.setHorizontalGroup(
+            UsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(UsuarioLayout.createSequentialGroup()
+                .addGap(127, 127, 127)
+                .addComponent(jLabel3)
+                .addContainerGap(505, Short.MAX_VALUE))
+        );
+        UsuarioLayout.setVerticalGroup(
+            UsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(UsuarioLayout.createSequentialGroup()
+                .addGap(112, 112, 112)
+                .addComponent(jLabel3)
+                .addContainerGap(234, Short.MAX_VALUE))
+        );
+
+        navegador.addTab("Usuario", Usuario);
+
+        jLabel4.setText("tal");
+
+        javax.swing.GroupLayout BuscadorLayout = new javax.swing.GroupLayout(Buscador);
+        Buscador.setLayout(BuscadorLayout);
+        BuscadorLayout.setHorizontalGroup(
+            BuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BuscadorLayout.createSequentialGroup()
+                .addGap(233, 233, 233)
+                .addComponent(jLabel4)
+                .addContainerGap(406, Short.MAX_VALUE))
+        );
+        BuscadorLayout.setVerticalGroup(
+            BuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BuscadorLayout.createSequentialGroup()
+                .addGap(96, 96, 96)
+                .addComponent(jLabel4)
+                .addContainerGap(250, Short.MAX_VALUE))
+        );
+
+        navegador.addTab("Buscador", Buscador);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nombreApellidosUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 578, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addComponent(navegador))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(nombreApellidosUser, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(fotoUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreApellidosUser, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(459, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(nombreApellidosUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(fotoUser, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(navegador)
+                .addContainerGap())
         );
 
         pack();
@@ -126,7 +211,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Buscador;
+    private javax.swing.JPanel Cine;
+    private javax.swing.JPanel Usuario;
+    public static javax.swing.JLabel fotoUser;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel nombreApellidosUser;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JTabbedPane navegador;
+    public static javax.swing.JLabel nombreApellidosUser;
     // End of variables declaration//GEN-END:variables
 }
