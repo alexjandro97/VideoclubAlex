@@ -1,7 +1,9 @@
 package codigo;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.TextField;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
 /*
@@ -24,7 +27,7 @@ import javax.swing.JPasswordField;
 * incremente el contador a continuación
 * como advertencia para su siguiente colega:
 *
-* total_horas_perdidas_en_este_codigo = 6
+* total_horas_perdidas_en_este_codigo = 20
 */
 
 /**
@@ -39,11 +42,12 @@ public class VentanaInicio extends javax.swing.JFrame {
     //Array para guardar el nombre y apellido del usuario
     static String[] nombres = new String[2];
     static MenuPrincipal frame = new MenuPrincipal();
+   
     
-    private void login(){
+    private void login() {
         String user = userText.getText();
         String pass = String.valueOf(password.getPassword());
-      try{
+        try {
             Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection("jdbc:mysql://192.168.56.101/videoclub", "root", "admin.1234");
             estado = conexion.createStatement();
@@ -53,7 +57,7 @@ public class VentanaInicio extends javax.swing.JFrame {
             int logCorrecto = resultado.getRow();
             
             if(logCorrecto == 1){
-                //MenuPrincipal.nombreApellidosUser.setText(user);
+                //pasamos al siguiente Frame
                 frame.setVisible(true);
                 //hago una consulta para sacar el nombre y apellido del usuario segun el DNI (clave)
                 ResultSet nombre = estado.executeQuery("SELECT Nombre, Apellido FROM videoclub.usuarios WHERE DNI='"+user+"'");
@@ -61,18 +65,17 @@ public class VentanaInicio extends javax.swing.JFrame {
                     nombres[0] = nombre.getString("Nombre");
                     nombres[1] = nombre.getString("Apellido");
                 }
-                MenuPrincipal.nombreApellidosUser.setText(nombres[0] + " " + nombres[1]);
+                MenuPrincipal.nombreApellidosUser.setText("Bienvenida al VideoClub Malasaña: " + nombres[0] + " " + nombres[1]);
                 //declaro la foto del usuario para meterla en el jLabel
                 ImageIcon fotoUsuario = new ImageIcon(
-                                          getClass().getResource("/fotosUsuarios/"+user + ".jpg")
-                                            );
+                                          getClass().getResource("/fotosUsuarios/"+user+".jpg"));
+                
                 //meto la foto en el jLabel
                 MenuPrincipal.fotoUser.setIcon(fotoUsuario);
                 this.setVisible(false);
             } else {
                 ventanaError.setVisible(true);
             }
-            
         } catch(ClassNotFoundException ex){
             System.out.println("No se ha encontrado el Driver de la BBDD");
         } catch (SQLException ex){
@@ -98,6 +101,7 @@ public class VentanaInicio extends javax.swing.JFrame {
      */
     public VentanaInicio() {
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("/img/claqueta1.png")).getImage());
         this.setLocation(450, 225);
         ventanaError.setSize(510, 300);
         ventanaError.setLocation(400, 225);
@@ -111,6 +115,7 @@ public class VentanaInicio extends javax.swing.JFrame {
         ventanaError = new javax.swing.JDialog();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        fondoFrame = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         userText = new javax.swing.JTextField();
@@ -154,17 +159,29 @@ public class VentanaInicio extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        fondoFrame.setLayout(null);
+
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Login Videoclub Malasaña");
+        fondoFrame.add(jLabel1);
+        jLabel1.setBounds(53, 16, 323, 36);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("User:");
+        fondoFrame.add(jLabel2);
+        jLabel2.setBounds(53, 72, 60, 19);
+
+        userText.setText("5036787");
+        fondoFrame.add(userText);
+        userText.setBounds(139, 70, 186, 24);
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Password:");
+        fondoFrame.add(jLabel3);
+        jLabel3.setBounds(53, 113, 80, 19);
 
         login.setText("Acceder");
         login.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -172,44 +189,22 @@ public class VentanaInicio extends javax.swing.JFrame {
                 loginMousePressed(evt);
             }
         });
+        fondoFrame.add(login);
+        login.setBounds(170, 150, 118, 53);
+
+        password.setText("5036787");
+        fondoFrame.add(password);
+        password.setBounds(139, 112, 186, 22);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 27, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(userText)
-                            .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(password, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
-                        .addGap(39, 39, 39)))
-                .addContainerGap())
+            .addComponent(fondoFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(userText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+            .addComponent(fondoFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
         );
 
         pack();
@@ -259,6 +254,7 @@ public class VentanaInicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel fondoFrame;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
