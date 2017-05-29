@@ -27,7 +27,7 @@ import javax.swing.JPasswordField;
 * incremente el contador a continuación
 * como advertencia para su siguiente colega:
 *
-* total_horas_perdidas_en_este_codigo = 20
+* total_horas_perdidas_en_este_codigo = 36
 */
 
 /**
@@ -106,6 +106,7 @@ public class VentanaInicio extends javax.swing.JFrame {
         ventanaError.setSize(510, 300);
         ventanaError.setLocation(400, 225);
         conexion();
+        this.setTitle("Videoclub Malasaña");
     }
     
     @SuppressWarnings("unchecked")

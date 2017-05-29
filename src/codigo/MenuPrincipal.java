@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -16,17 +17,19 @@ import javax.swing.JLabel;
  * @author alexj
  */
 public class MenuPrincipal extends javax.swing.JFrame {
-
     
     Connection conexion;//para almacenar la conexion
     Statement estado;//almacenar el estado de la conexion
     ResultSet resultado;//resultado de la consulta
     static VentanaInicio login = new VentanaInicio();
     private Dimension dim;
-    String[] datosPeliculas = new String[7];
+    String[] datosPeliculas = new String[8];
+    ArrayList<String[]> datosPeliculasList = new ArrayList();
     String[] datosUsuario = new String[5];
-    
-    
+    ArrayList<String[]> datosUsuarioList = new ArrayList();
+    int anchoPeli = 95;
+    int altoPeli = 160;
+    int contador = 0;
     
     private void usuarioMenu() {
         try {
@@ -41,6 +44,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                     datosUsuario[2] = resultado.getString("Apellido");
                     datosUsuario[3] = resultado.getString("Penalizacion");
                     datosUsuario[4] = resultado.getString("email");
+                    datosUsuarioList.add(datosUsuario);
                 }
             
         } catch (ClassNotFoundException ex) {
@@ -58,13 +62,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
             resultado = estado.executeQuery("SELECT * FROM videoclub.peliculas");
             resultado.first();
             while (resultado.next()) {
-                datosPeliculas[0] = resultado.getString("titulo");
+                datosPeliculas[0] = resultado.getString("id_pelicula");
+                datosPeliculas[7] = resultado.getString("titulo");
                 datosPeliculas[1] = resultado.getString("año");
                 datosPeliculas[2] = resultado.getString("pais");
                 datosPeliculas[3] = resultado.getString("genero");
                 datosPeliculas[4] = resultado.getString("imdb");
                 datosPeliculas[5] = resultado.getString("clasificacion_imdb");
                 datosPeliculas[6] = resultado.getString("resumen");
+                datosPeliculasList.add(datosPeliculas);
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("No se ha encontrado el Driver de la BBDD");
@@ -73,32 +79,93 @@ public class MenuPrincipal extends javax.swing.JFrame {
         }
     }
     
-    private void alquilarPelicula() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://192.168.56.101/videoclub", "root", "admin.1234");
-            estado = conexion.createStatement();
-            /*
-            Vamos a meter en la tabla prestamos un alquiler nuevo
-            */
-            String query = " INSERT INTO prestamos (id_pelicula, NumeroEjemplar, DNIUsuario, FechaPrestamo, FechaDevolucion)"
-        + " values (?, ?, ?, ?, ?)";
-            resultado.first();
-            while (resultado.next()) {
-              
-            }
-        } catch (ClassNotFoundException ex) {
-            System.out.println("No se ha encontrado el Driver de la BBDD");
-        } catch (SQLException ex) {
-            System.out.println("No se ha podido conectar con la BBDD");
-        }
+    public void slider(){
+        Image derecha = (new ImageIcon(new ImageIcon(getClass().getResource("/img/derecha.png")).getImage()
+                .getScaledInstance(56, 80, Image.SCALE_DEFAULT))).getImage();
+        
+        ImageIcon derechaFinal = new ImageIcon(derecha);
+        
+        movDre.setIcon(derechaFinal);
+        movDre.updateUI();
+        
+        Image izquierda = (new ImageIcon(new ImageIcon(getClass().getResource("/img/izquierda.png")).getImage()
+                .getScaledInstance(56, 80, Image.SCALE_DEFAULT))).getImage();
+        
+        ImageIcon izquierdaFinal = new ImageIcon(izquierda);
+        
+        movIzq.setIcon(izquierdaFinal);
+        movIzq.updateUI();
+        
+       imprimirCaratula(0);
     }
-
+    
+    public void imprimirDatosPeli(int posPeli){
+        String nombreImagen2;
+        nombreImagen2 = datosPeliculasList.get(posPeli)[0];
+        for(int x = nombreImagen2.length(); x < 6; x++){
+            nombreImagen2 = "0" + nombreImagen2;
+        }
+        Image fotoPeli = (new ImageIcon(new ImageIcon(getClass().getResource("/caratulas/"+nombreImagen2+".jpg")).getImage()
+                .getScaledInstance(180, 220, Image.SCALE_DEFAULT))).getImage();
+        
+        ImageIcon caratula = new ImageIcon(fotoPeli);
+        
+        imagenPeli.setIcon(caratula);
+        imagenPeli.updateUI();
+        
+        tituloPeli.setText("Titulo: " + datosPeliculasList.get(posPeli)[7]);
+        anioPublicacion.setText("Año Publicación: " + datosPeliculasList.get(posPeli)[1]);
+        genero.setText("Genero: " + datosPeliculasList.get(posPeli)[3]);
+        paisPeli.setText("Pais: " + datosPeliculasList.get(posPeli)[2]);
+        imdbPeli.setText("IMDB: " + datosPeliculasList.get(posPeli)[4]);
+        calificacionPeli.setText("Calificación: " + datosPeliculasList.get(posPeli)[5]);
+        descripcionPeli.setText(datosPeliculasList.get(posPeli)[6]);        
+    }
+    
+    public void pulsarLabel(String posPeli){
+        imprimirDatosPeli(Integer.valueOf(posPeli)-2);
+    }
+    
+    public void imprimirCaratula(int posicion) {
+       String nombreImagen;
+       JLabel pelisLabel = new JLabel();
+       int posX = posicion;
+       
+       for(int i = 0; i < 7; i++){
+           pelisLabel = new JLabel();
+           
+           if(contador < datosPeliculasList.size()){
+               nombreImagen = datosPeliculasList.get(contador)[0];
+               for(int j = nombreImagen.length(); j < 6; i++){
+                   nombreImagen = "0" + nombreImagen;
+               }
+               
+               Image fotoPeli = (new ImageIcon(new ImageIcon(getClass().getResource("/caratulas/"+nombreImagen+".jpg")).getImage()
+                .getScaledInstance(anchoPeli, altoPeli, Image.SCALE_DEFAULT))).getImage();
+               ImageIcon caratula = new ImageIcon(fotoPeli);
+               
+               pelisLabel.setBounds(posX, 1, anchoPeli, altoPeli);
+               pelisLabel.setText(datosPeliculasList.get(contador)[0]);
+               pelisLabel.setVisible(true);
+               pelisLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                   public void mousePressed(java.awt.event.MouseEvent evt){
+                       pulsarLabel(datosPeliculasList.get(contador)[0]);
+                   }
+               });
+               pelisPanel.add(pelisLabel);
+               pelisPanel.updateUI();
+               posX += anchoPeli +15;
+           }
+           contador++;
+       }
+    }
+ 
     /**
      * Creates new form MenuPrincipal
      */
     public MenuPrincipal() {
         initComponents();
+        this.setTitle("Inicio - Videoclub Malasaña");
         setIconImage(new ImageIcon(getClass().getResource("/img/claqueta1.png")).getImage());
         dim=super.getToolkit().getScreenSize();
         super.setSize(dim);
@@ -106,12 +173,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
         peliculas.setSize(1024, 450);
         peliculas.setLocation(150, 90);
         peliculas.setIconImage(new ImageIcon(getClass().getResource("/img/claqueta1.png")).getImage());
+        peliculas.setTitle("Videoclub Malasaña");
         usuarioDialog.setSize(600, 500);
         usuarioDialog.setLocation(400, 90);
+        usuarioDialog.setTitle("Perfil - Videoclub Malasaña");
         alquilarPeliculas.setSize(1024, 450);
+        alquilarPeliculas.setTitle("Alquilar - Videoclub Malasaña");
         alquilarPeliculas.setLocation(150, 90);
         pelicula();
         usuarioMenu();
+        slider();
     }
 
     /**
@@ -145,7 +216,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
         fotoUser = new javax.swing.JLabel();
         navegador = new javax.swing.JTabbedPane();
         Cine = new javax.swing.JPanel();
-        pelicula = new javax.swing.JLabel();
+        pelisPanel = new javax.swing.JPanel();
+        movIzq = new javax.swing.JLabel();
+        movDre = new javax.swing.JLabel();
         Buscador = new javax.swing.JPanel();
         txtBuscar = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -155,8 +228,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         sessionItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-
-        imagenPeli.setText("foto");
 
         tituloPeli.setFont(new java.awt.Font("DialogInput", 1, 24)); // NOI18N
 
@@ -278,29 +349,39 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         nombreApellidosUser.setFont(new java.awt.Font("DialogInput", 1, 18)); // NOI18N
 
-        pelicula.setIcon(new javax.swing.ImageIcon(getClass().getResource("/caratulas/000001.jpg"))); // NOI18N
-        pelicula.setText("jLabel1");
-        pelicula.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                peliculaMousePressed(evt);
-            }
-        });
+        javax.swing.GroupLayout pelisPanelLayout = new javax.swing.GroupLayout(pelisPanel);
+        pelisPanel.setLayout(pelisPanelLayout);
+        pelisPanelLayout.setHorizontalGroup(
+            pelisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 858, Short.MAX_VALUE)
+        );
+        pelisPanelLayout.setVerticalGroup(
+            pelisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 384, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout CineLayout = new javax.swing.GroupLayout(Cine);
         Cine.setLayout(CineLayout);
         CineLayout.setHorizontalGroup(
             CineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CineLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CineLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pelicula, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(866, Short.MAX_VALUE))
+                .addComponent(movIzq, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pelisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(movDre, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         CineLayout.setVerticalGroup(
             CineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CineLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CineLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pelicula)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addGroup(CineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(movDre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(movIzq, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pelisPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         navegador.addTab("Cine", Cine);
@@ -395,18 +476,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void peliculaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peliculaMousePressed
-        peliculas.setVisible(true);
-        tituloPeli.setText("Título:  " + datosPeliculas[0]);
-        anioPublicacion.setText("Año de Publicación:  " + datosPeliculas[1]);
-        paisPeli.setText("País:  " + datosPeliculas[2]);
-        genero.setText("Género:  " + datosPeliculas[3]);
-        imdbPeli.setText("IMDB:  " + datosPeliculas[4]);
-        calificacionPeli.setText("Calificación:  " + datosPeliculas[5]);
-        descripcionPeli.setText(datosPeliculas[6]);
-        imagenPeli.setIcon(pelicula.getIcon());
-    }//GEN-LAST:event_peliculaMousePressed
-
     private void sessionItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sessionItemMousePressed
         this.setVisible(false);
         login.setVisible(true);
@@ -483,12 +552,14 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    public static javax.swing.JLabel movDre;
+    public static javax.swing.JLabel movIzq;
     private javax.swing.JTabbedPane navegador;
     public static javax.swing.JLabel nombreApellidosUser;
     private javax.swing.JLabel nombreLabel;
     public static javax.swing.JLabel paisPeli;
-    private javax.swing.JLabel pelicula;
     private javax.swing.JDialog peliculas;
+    private javax.swing.JPanel pelisPanel;
     private javax.swing.JLabel penalizacionLabel;
     private javax.swing.JMenuItem sessionItem;
     public static javax.swing.JLabel tituloPeli;
