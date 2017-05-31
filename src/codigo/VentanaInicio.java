@@ -27,7 +27,7 @@ import javax.swing.JPasswordField;
 * incremente el contador a continuación
 * como advertencia para su siguiente colega:
 *
-* total_horas_perdidas_en_este_codigo = 36
+* total_horas_perdidas_en_este_codigo = 43
 */
 
 /**
@@ -60,18 +60,20 @@ public class VentanaInicio extends javax.swing.JFrame {
                 //pasamos al siguiente Frame
                 frame.setVisible(true);
                 //hago una consulta para sacar el nombre y apellido del usuario segun el DNI (clave)
-                ResultSet nombre = estado.executeQuery("SELECT Nombre, Apellido FROM videoclub.usuarios WHERE DNI='"+user+"'");
+                ResultSet nombre = estado.executeQuery("SELECT * FROM videoclub.usuarios WHERE DNI='"+user+"'");
                 while(nombre.next()){
                     nombres[0] = nombre.getString("Nombre");
                     nombres[1] = nombre.getString("Apellido");
                 }
                 MenuPrincipal.nombreApellidosUser.setText("Bienvenida al VideoClub Malasaña: " + nombres[0] + " " + nombres[1]);
+                
                 //declaro la foto del usuario para meterla en el jLabel
                 ImageIcon fotoUsuario = new ImageIcon(
                                           getClass().getResource("/fotosUsuarios/"+user+".jpg"));
-                
+              
                 //meto la foto en el jLabel
                 MenuPrincipal.fotoUser.setIcon(fotoUsuario);
+               
                 this.setVisible(false);
             } else {
                 ventanaError.setVisible(true);
@@ -174,7 +176,7 @@ public class VentanaInicio extends javax.swing.JFrame {
         fondoFrame.add(jLabel2);
         jLabel2.setBounds(53, 72, 60, 19);
 
-        userText.setText("5036787");
+        userText.setText("5992988");
         fondoFrame.add(userText);
         userText.setBounds(139, 70, 186, 24);
 
@@ -193,7 +195,7 @@ public class VentanaInicio extends javax.swing.JFrame {
         fondoFrame.add(login);
         login.setBounds(170, 150, 118, 53);
 
-        password.setText("5036787");
+        password.setText("5992988");
         fondoFrame.add(password);
         password.setBounds(139, 112, 186, 22);
 
