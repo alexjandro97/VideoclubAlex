@@ -105,10 +105,11 @@ public class VentanaInicio extends javax.swing.JFrame {
         initComponents();
         setIconImage(new ImageIcon(getClass().getResource("/img/claqueta1.png")).getImage());
         this.setLocation(450, 225);
-        ventanaError.setSize(510, 300);
-        ventanaError.setLocation(400, 225);
+        ventanaError.setSize(510, 550);
+        ventanaError.setLocation(400, 90);
         conexion();
         this.setTitle("Videoclub Malasaña");
+        fotoWarning.setIcon(new ImageIcon(getClass().getResource("/img/warning.png")));
     }
     
     @SuppressWarnings("unchecked")
@@ -118,6 +119,7 @@ public class VentanaInicio extends javax.swing.JFrame {
         ventanaError = new javax.swing.JDialog();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        fotoWarning = new javax.swing.JLabel();
         fondoFrame = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -142,22 +144,29 @@ public class VentanaInicio extends javax.swing.JFrame {
         ventanaErrorLayout.setHorizontalGroup(
             ventanaErrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ventanaErrorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+                .addGroup(ventanaErrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ventanaErrorLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
+                    .addGroup(ventanaErrorLayout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ventanaErrorLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fotoWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(ventanaErrorLayout.createSequentialGroup()
-                .addGap(146, 146, 146)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ventanaErrorLayout.setVerticalGroup(
             ventanaErrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ventanaErrorLayout.createSequentialGroup()
-                .addContainerGap(44, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(fotoWarning, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53))
+                .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -221,6 +230,7 @@ public class VentanaInicio extends javax.swing.JFrame {
         ventanaError.setVisible(false);
     }//GEN-LAST:event_jButton1MousePressed
 
+    
     /**
      * @param args the command line arguments
      */
@@ -258,6 +268,7 @@ public class VentanaInicio extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel fondoFrame;
+    public javax.swing.JLabel fotoWarning;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

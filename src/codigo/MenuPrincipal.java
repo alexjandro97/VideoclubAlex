@@ -12,9 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SpinnerNumberModel;
@@ -205,32 +209,51 @@ public class MenuPrincipal extends javax.swing.JFrame {
             System.out.println("NO SE HA PODIDO CONECTAR A LA BBDD");
         }
     }
-     
+     //..
+    /*
+    Este es el metodo para imprimir las caratulas de las pelis que he buscado
+    */
     public void generaCaratulaBuscador(int _posX){
+        String peliBuscar = txtBuscar.getText();
         String nomCaratula;
-        int posX= _posX;
-        int anchoCaratula =80;
-        int posVertical=1;
-        
-        
-        while(contadorBuscador < pelisBuscarArrayList.size()){
-            for(int u = 0; u < 14; u++){
-                if(contadorBuscador < pelisBuscarArrayList.size()){
-                    label = new JLabel();
-                    nomCaratula= pelisBuscarArrayList.get(contadorBuscador)[0];
-                    label.setBounds(posX, posVertical,80,120);
-                    label.setIcon(adaptaCaratulas(nomCaratula));
-                    label.setText(pelisBuscarArrayList.get(contadorBuscador)[0]);
-                    label.setVisible(true);
-                    peliPanelBuscador.add(label);
-                    peliPanelBuscador.updateUI();
-                    posX+= anchoCaratula+15;
+        int posX = _posX;
+        int anchoCaratula = 80;
+        int posVertical = 1;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conexion = DriverManager.getConnection("jdbc:mysql://192.168.56.101/videoclub", "root", "admin.1234");
+            //Realizo la conexcion
+            estado = conexion.createStatement();
+            //Realizo la consulta
+            resultado = estado.executeQuery("SELECT * FROM videoclub.peliculas WHERE titulo LIKE '%"+peliBuscar+"%'");
+            while (resultado.next()) {
+                pelisBuscarArray[0] = resultado.getString("id_pelicula");
+                pelisBuscarArrayList.add(pelisBuscarArray);
+                while (contadorBuscador < pelisBuscarArrayList.size()) {
+                    for (int u = 0; u < pelisBuscarArrayList.size(); u++) {
+                        if (contadorBuscador < pelisBuscarArrayList.size()) {
+                            label = new JLabel();
+                            nomCaratula = pelisBuscarArrayList.get(contadorBuscador)[0];
+                            label.setBounds(posX, posVertical, 80, 120);
+                            label.setIcon(adaptaCaratulas(nomCaratula));
+                            label.setText(pelisBuscarArrayList.get(contadorBuscador)[0]);
+                            label.setVisible(true);
+                            peliPanelBuscador.add(label);
+                            peliPanelBuscador.updateUI();
+                            posX += anchoCaratula + 15;
+                        }
+                        contadorBuscador++;
+                    }
+                    posVertical += 110 + 15;
+                    posX = _posX;
                 }
-                contadorBuscador++;
             }
-            posVertical+= 110+15;
-            posX=_posX;   
-        }        
+        } catch (ClassNotFoundException ex) {
+            System.out.println("NO SE HA ENCONTRADO EL DRIVER");
+        } catch (SQLException ex) {
+
+            System.out.println("NO SE HA PODIDO CONECTAR A LA BBDD");
+        }
     }
     
     
@@ -719,58 +742,55 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_botonBuscadorMousePressed
 
     private void alquilarPeliculaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alquilarPeliculaMousePressed
-        /*
+
+       /*
         Me falta hacer la consulta para convertir el nombre de la pelicula en su ID y pasar el 
         jTextField a formato fecha
         */
         String pelicula = textoalquilar.getText();
-        int ejemplares = Integer.parseInt(String.valueOf(spinnerEjemplar.getValue()));
-        int userId = Integer.parseInt(DNIUsuario.getText());
-        String fechaActual = fechaprestamo.getText();
-        int fechaDev = Integer.parseInt(fechaDevolucion.getText());
-        String query = "INSERT INTO videoclub.prestamos (id_pelicula, NumeroEjemplar,"
-                    + " DNIUsuario, FechaPrestamo, FechaDevolucion) VALUES (,,,,)";
+        System.out.println(pelicula);
+        
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection("jdbc:mysql://192.168.56.101/videoclub", "root", "admin.1234");
             estado = conexion.createStatement();
-            resultado = estado.executeQuery("SELECT id_pelicula FROM videoclub.peliculas WHERE titulo = '" + pelicula + "'");
-            int id_pelicula = Integer.parseInt(resultado.getString("id_pelicula"));
+            resultado = estado.executeQuery("SELECT * FROM videoclub.peliculas WHERE titulo = '" + pelicula + "'");
+            while (resultado.next()) {
+                int peliculaId = resultado.getInt("id_pelicula");
+                int ejemplares = Integer.parseInt(String.valueOf(spinnerEjemplar.getValue()));
+                int usuarioId = Integer.parseInt(DNIUsuario.getText());
+                String fechaInicio = fechaprestamo.getText(); 
+                String fechaFin = fechaDevolucion.getText();  
+                //comprobaciones
+                System.out.println("idPeli "+peliculaId);
+                System.out.println("Cantidad "+ejemplares);
+                System.out.println("usuario"+usuarioId);
+                System.out.println("fechaInicio "+fechaInicio);
+                System.out.println("fechaFin "+fechaFin);
+                
+                System.out.println("Prepara los datos para la insecion en el siguiente paso");
+                // Indicamos que comience la actualización de la tabla en nuestra base de datos
+                estado.executeUpdate("INSERT INTO videoclub.prestamos (id_pelicula, NumeroEjemplar, DNIUsuario, FechaPrestamo, FechaDevolucion)"
+                        + " VALUES ('"+peliculaId+"','"+ejemplares+"','"+usuarioId+"','"+fechaInicio+"','"+fechaFin+"')");
+                System.out.println("Realizo la insercion con exito <3 <3 <3");
+            }
 
-            
-            PreparedStatement insert = conexion.prepareStatement(query); 
-
-            insert.setInt(1, id_pelicula);
-            insert.setInt(2, ejemplares);
-            insert.setInt(3, userId);
-            insert.setString(4, fechaActual);
-            insert.setInt(5, fechaDev);
-
-            // Indicamos que comience la actualización de la tabla en nuestra base de datos
-            insert.executeUpdate();
-
-            //cierro la conexion a la BDD videocluab 
-            estado.close();
-            conexion.close();
-
-            System.out.println("Llamada agregada con éxito a la base de datos.");
-            
-            
-        } catch(ClassNotFoundException ex){
+        } catch (ClassNotFoundException ex) {
             System.out.println("No se ha encontrado el Driver de la BBDD");
-        } catch (SQLException ex){
+        } catch (SQLException ex) {
             System.out.println("No se ha podido conectar con la BBDD");
         }
+        alquilarPeliculas.setVisible(false);
     }//GEN-LAST:event_alquilarPeliculaMousePressed
 
     public void labelMousePressed(JLabel caratula){
         peliDatos(caratula.getText());
         peliculas.setVisible(true);
-    }
+    }    
     
     public static String fechaActual() {
         Date fecha = new Date();
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
         return formatoFecha.format(fecha);
     }
     
@@ -822,7 +842,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextArea descripcionpeli;
     private javax.swing.JLabel dniLabel;
     private javax.swing.JLabel emaillabel;
-    public javax.swing.JTextField fechaDevolucion;
+    private javax.swing.JTextField fechaDevolucion;
     public javax.swing.JTextField fechaprestamo;
     public static javax.swing.JLabel fotoUser;
     private javax.swing.JLabel fotoUserLabel;
